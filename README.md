@@ -1,12 +1,107 @@
 # Internship-project
-Install the npm and its dependencies
+Install the npm and its dependencies using "npm install"  
+
 create a mongodb database and connect with it,
+
+mongoose.connect(process.env.MONGO_URL)
+.then(()=>console.log("mongoDB is connected")).catch((err)=> console.log(err))
+
+
 Run the program using "npm start"
-run the backen using npm start
+
+
+
 Add mongodb url, JWT secret and PORT to dotenv file and name them accordingly
-import dotenv into app.js file.
-Craete a login, create a user in the database.
-Signing in will create jwt token and authenticatin for further operations 
-User can create, find all, find one book, update and delete book from mongodb.
-logout will earse token from local strorage and will make token invalid.
-user have to sign in again to get a token and perform usual solution.
+
+1. 	MIDDLEWARE TO CHECK WETHER USER IS SIGNED IN OR NOT BY LOOKING AT THE COOKIE STORED
+
+	 
+const isAuthenticatedUser = async(req, res, next) =>{
+    const extractedToken = req.headers.authorization.split(" ")[1] // Bearer token
+    if(!extractedToken && extractedToken.trim() === ""){
+        return res.status(404).json({message:"Token not found"})
+    }
+    jwt.verify(extractedToken, process.env.JWT_SECRET,(err, decrypted)=>{
+        if(err){
+            return res.status(400).json({message:`${err.message}`})
+        }
+        return
+    })
+    next();
+};
+
+
+
+2 USER API WILL ALLOW ALL KIND OF FUNCTION OF USER SUCH AS LOGIN OR SIGNIN OR LOGOUT
+
+===> app.use("/POST/api", userRouter)
+
+THIS WILL DIRECT THE API TO USEROUTER WHER
+
+A. LOGIN IS PERFORMED USING USERNAME, EMAIL ANS PASSWORD
+ --> userRouter.post("/register",signup)--> WILL GUIDE THE USER TO SIGNINUP FUNCTION
+ -----------------------------------------------------------------------------------
+ export const signup = async (req,res,next)=>{
+    const {username,email,password} = req.body;
+    const hashPassword = bcryptjs.hashSync(password,10)
+    const newUser = new User({username, email,password:hashPassword})
+
+    try {
+        await newUser.save()
+        res.status(201).json({message:"user created"})
+    } catch (error) {
+        return console.log(error)
+    }
+     
+}
+
+B. SIGN IN IS FERORMED AFTER THE SINUP FUCTION TO AUTHENTICATE WETHER THE USER IS PRESNT IN DATABSE OR NOT----> iF PRESNT, THIS FUCTION WILL CREATE TOKEN USING JWT 
+AND WILL BE USED IN ALL THE OPERATION WHICH ONLY USER IS ALLOWED SUCH AS -> ADDING BOOK, DELETING BOOK, UPDATTING BOOK ETC............ THE EXPIRDY DATE IS THE TIME THIS TOKEN IS VALID,
+JWT_SECRET KEY IS MADE IN DOTENV FILE FOR SECURITY AND CHECKING THE CORRECTNESS OF TOKEN
+
+userRouter.post("/login",signin)-----------> WILL GUID TO SINGIN FUCTION
+-----------------------------------------------------------------------------------------------------------
+export const signin = async (req,res,next)=>{
+    const {email, password} = req.body
+
+    try {
+        const validUser = await User.findOne({email})
+        if(!validUser){
+            return res.status(404).json({message:'User not found'} )
+        }
+        const validPassword = bcryptjs.compareSync(password, validUser.password)
+        if(!validPassword){
+            return next(errorHandler(401, 'wrong password'))
+        }
+        const token = jwt.sign({id:validUser._id}, process.env.JWT_SECRET)
+        const expiryDate = new Date(Date.now()+3600000000)
+        const {password:hashPassword, ...rest} = validUser._doc
+        res.cookie('access_token', token, {httpOnly:true, expires:expiryDate}).status(200).json({rest,token})
+
+    } catch (error) {
+        return console.log(error)
+    }
+}
+
+
+C.   lOGOUT FUCTION IS REMOVE THE TOEKN USING clearCookie  SYNTEX TO NOT ALLOW THE USER WITHOUT TOKEN TO PERFORM ANY RESERVE FUCTION.
+THIS CAN BE ONLY PERFORMED MY USER, HENCE MIDDLEWARE IS USED. MIDDLEWARE WILL CHECK WETHER USER IS HAVING TOKEN OR NOT, WHICH WILL BE PRESNT 
+INSIDE auth OF HEADER AS bearer token.
+-------------------
+userRouter.post("/logout",isAuthenticatedUser, Logout)
+------------------------------------------------------------------
+export const Logout = async(req,res,next)=>{
+    
+    try {
+        res.clearCookie("access_token");
+        return res.status(200).json({message:"loged out"})
+    } catch (error) {
+        return console.log(error)
+    }
+    
+}
+-----------------------------------------------------------------------------------------------------------------------------
+FUCTION ONLY USER CAN PERFORM ---- CURD OPERATION FOR BOOKS.
+
+
+
