@@ -12,12 +12,13 @@ Run the program using "npm start"
 
 
 Add mongodb url, JWT secret and PORT to dotenv file and name them accordingly
+Ddotenv is already imported in app.js, for just mare declaration of url, secret and port in dotenv file will work
 
 1. 	MIDDLEWARE TO CHECK WETHER USER IS SIGNED IN OR NOT BY LOOKING AT THE COOKIE STORED
 
 	 
 const isAuthenticatedUser = async(req, res, next) =>{
-    const extractedToken = req.headers.authorization.split(" ")[1] // Bearer token
+    const extractedToken = req.headers.authorization.split(" ")[1]
     if(!extractedToken && extractedToken.trim() === ""){
         return res.status(404).json({message:"Token not found"})
     }
@@ -102,6 +103,96 @@ export const Logout = async(req,res,next)=>{
 }
 -----------------------------------------------------------------------------------------------------------------------------
 FUCTION ONLY USER CAN PERFORM ---- CURD OPERATION FOR BOOKS.
+1.ADDING THE BOOK---------------------
+	bookRouter.post("/books",isAuthenticatedUser,AddBook)
+
+--------------------------------------
+export const AddBook = async(req,res,next) => {
+    
+    const {title ,authors, genre,publicationYear} = req.body
+    
+    let book;
+    try {
+        book = new Book({title,authors, genre,publicationYear})
+        book = await book.save()
+        if(!book){
+            return res.status(500).json({message:"Unexpected error occured"})
+        }
+        return res.status(201).json({message:"New Book created",book})
+    } catch (error) {
+        return console.log(error)
+    }
+}
+
+2.. GETTING ALL BOOK FROM DATABASE-----------------------------------------
+	bookRouter.get("/books",isAuthenticatedUser,getAllBooks)
+ --------------------------------------------------------------
+ export const getAllBooks = async(req,res,next)=>{
+    
+    const books = await Book.find();
+    try {
+        if(!books){
+            return res.status(404).json({message:"no result found"})
+        }
+        return res.status(200).json({books})
+    } catch (error) {
+        return console.log(error)
+    }
+}
+
+3. 	GETTING BOOK BY ID--------------------------------------------------------
+	bookRouter.get("/books/:id",isAuthenticatedUser, getBookbyId)
+---------------------------------------------------------------------------------
+export const getBookbyId = async(req,res,next)=>{
+    const id = req.params.id
+    try {
+        const book = await Book.findById(id)
+        if(!book){
+            return res.status(404).json({message:"No book found"})
+        }
+        return res.status(200).json({book})
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+4. UPDATE BOOK BY ID-----------------------------------------------------------------
+bookRouter.put("/books/:id",isAuthenticatedUser,UpdateBook)
+-------------------------------------------------------------------------
+export const UpdateBook = async(req,res,next)=>{
+    
+    const id = req.params.id
+    const {title ,authors, genre,publicationYear} = req.body
+    let book;
+    try {
+        book = await Book.findByIdAndUpdate(id,{title,authors,genre,publicationYear})
+        if(!book){
+            return res.status(500).json({message:"Unexpected error has occured"})
+        }
+        return res.status(200).json({message:"Successfully updated"})
+        
+    } catch (error) {
+        return console.log(error)
+    }
+}
+
+5. DELETE BOOK BY ID---------------------------------------------------------
+   bookRouter.delete("/books/:id",isAuthenticatedUser, DeleteBook)
+   -----------------------------------------------------------------------------
+   export const DeleteBook = async(req,res,next)=>{
+    
+    const id = req.params.id
+    let book;
+    try {
+        book = await Book.findByIdAndDelete(id)
+        if(!book){
+            return res.status(500).json({message:"unexpected error has occured"})
+        }
+        return res.status(200).json({message:"Successfully deleted"})
+    } catch (error) {
+        return console.log(error)
+    }
+}
 
 
 
