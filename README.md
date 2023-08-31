@@ -28,9 +28,16 @@ const isAuthenticatedUser = async(req, res, next) =>{
     next();
 };
 
+WHEREVER THIS MIDDLE WARE IS USED, SEND THE TOKEN TO BEAR WHICH YOU WILL GET AFTER SIGNIN API AS RES.------------------------------------------->
+----------SEND TOKEN IN->> AUTH->BEARER <<------------------- IN POSTMAN OR IN THUNDER CLIENT OF VISUAL STUDION--------------------------
+TOKEN IS GENERATED AFTER SIGNIN OPERATION.
+
+USE THIS A REFERENCE -> TOKEN SHOULD BE IN AUTH>BEARER---->https://github.com/Hydrogen-butene/Internship-project/assets/87589713/bafa3162-bc4c-4ea4-b683-d140588cc98f)
 
 
+--------------------------------------------------------------------------------------------------------------------
 2 USER API WILL ALLOW ALL KIND OF FUNCTION OF USER SUCH AS LOGIN OR SIGNIN OR LOGOUT
+-----------------------------------------------------------------------------------------------------------------------------
 
 ===> app.use("/POST/api", userRouter)
 
@@ -99,8 +106,9 @@ export const Logout = async(req,res,next)=>{
     
 }
 -----------------------------------------------------------------------------------------------------------------------------
-FUCTION ONLY USER CAN PERFORM ---- CURD OPERATION FOR BOOKS.
-1.ADDING THE BOOK---------------------
+3.FUCTION ONLY USER CAN PERFORM ---- CURD OPERATION FOR BOOKS.
+---------------------------------------------------------------------------------------------------------------------------------
+A.ADDING THE BOOK---------------------
 	bookRouter.post("/books",isAuthenticatedUser,AddBook)
 
 --------------------------------------
@@ -121,7 +129,7 @@ export const AddBook = async(req,res,next) => {
     }
 }
 
-2.. GETTING ALL BOOK FROM DATABASE-----------------------------------------
+B.. GETTING ALL BOOK FROM DATABASE-----------------------------------------
 	bookRouter.get("/books",isAuthenticatedUser,getAllBooks)
  --------------------------------------------------------------
  export const getAllBooks = async(req,res,next)=>{
@@ -137,7 +145,7 @@ export const AddBook = async(req,res,next) => {
     }
 }
 
-3. 	GETTING BOOK BY ID--------------------------------------------------------
+C. 	GETTING BOOK BY ID--------------------------------------------------------
 	bookRouter.get("/books/:id",isAuthenticatedUser, getBookbyId)
 ---------------------------------------------------------------------------------
 export const getBookbyId = async(req,res,next)=>{
@@ -153,7 +161,7 @@ export const getBookbyId = async(req,res,next)=>{
     }
 }
 
-4. UPDATE BOOK BY ID-----------------------------------------------------------------
+D. UPDATE BOOK BY ID-----------------------------------------------------------------
 bookRouter.put("/books/:id",isAuthenticatedUser,UpdateBook)
 -------------------------------------------------------------------------
 export const UpdateBook = async(req,res,next)=>{
@@ -173,7 +181,7 @@ export const UpdateBook = async(req,res,next)=>{
     }
 }
 
-5. DELETE BOOK BY ID---------------------------------------------------------
+E. DELETE BOOK BY ID---------------------------------------------------------
    bookRouter.delete("/books/:id",isAuthenticatedUser, DeleteBook)
    -----------------------------------------------------------------------------
    export const DeleteBook = async(req,res,next)=>{
