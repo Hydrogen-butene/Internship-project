@@ -3,8 +3,8 @@ Install the npm and its dependencies using "npm install"  in comand prompt where
 
 create a mongodb database and connect with it,
 
-mongoose.connect(process.env.MONGO_URL)
-.then(()=>console.log("mongoDB is connected")).catch((err)=> console.log(err))
+	mongoose.connect(process.env.MONGO_URL)
+	.then(()=>console.log("mongoDB is connected")).catch((err)=> console.log(err))
 
 
 Run the program using "npm start"
@@ -12,11 +12,12 @@ Run the program using "npm start"
 Ddotenv is already imported in app.js, for just mare declaration of url, secret and port in dotenv file will work
 
 1. 	MIDDLEWARE TO CHECK WETHER USER IS SIGNED IN OR NOT BY LOOKING AT THE COOKIE STORED
+   --------------------------------------------------------------------------------------
 
 	 
 const isAuthenticatedUser = async(req, res, next) =>{
     const extractedToken = req.headers.authorization.split(" ")[1]
-    if(!extractedToken && extractedToken.trim() === ""){
+    	if(!extractedToken && extractedToken.trim() === ""){
         return res.status(404).json({message:"Token not found"})
     }
     jwt.verify(extractedToken, process.env.JWT_SECRET,(err, decrypted)=>{
@@ -27,12 +28,12 @@ const isAuthenticatedUser = async(req, res, next) =>{
     })
     next();
 };
-
-WHEREVER THIS MIDDLE WARE IS USED, SEND THE TOKEN TO BEAR WHICH YOU WILL GET AFTER SIGNIN API AS RES.------------------------------------------->
-----------SEND TOKEN IN->> AUTH->BEARER <<------------------- IN POSTMAN OR IN THUNDER CLIENT OF VISUAL STUDION--------------------------
+----------------------------------------------------------------------------------------------------
+WHEREVER THIS MIDDLE WARE IS USED, SEND THE TOKEN TO BEARER WHICH YOU WILL GET AFTER SIGNIN API AS RES.------------------------------------------->
+----------SEND TOKEN IN->> AUTH->BEARER <<------------------- IN POSTMAN OR IN THUNDER CLIENT OF VISUAL STUDIO-------------------------
 TOKEN IS GENERATED AFTER SIGNIN OPERATION.
 
-USE THIS A REFERENCE -> TOKEN SHOULD BE IN AUTH>BEARER---->https://github.com/Hydrogen-butene/Internship-project/assets/87589713/bafa3162-bc4c-4ea4-b683-d140588cc98f)
+USE THIS A REFERENCE PIC-> TOKEN SHOULD BE IN AUTH>BEARER---->https://github.com/Hydrogen-butene/Internship-project/assets/87589713/bafa3162-bc4c-4ea4-b683-d140588cc98f)
 
 
 --------------------------------------------------------------------------------------------------------------------
@@ -42,6 +43,7 @@ USE THIS A REFERENCE -> TOKEN SHOULD BE IN AUTH>BEARER---->https://github.com/Hy
 ===> app.use("/POST/api", userRouter)
 
 THIS WILL DIRECT THE API TO USEROUTER WHER
+------------------------------------------------------------------------------------------------------------------------------------------
 
 A. LOGIN IS PERFORMED USING USERNAME, EMAIL ANS PASSWORD
  --> userRouter.post("/register",signup)--> WILL GUIDE THE USER TO SIGNINUP FUNCTION
