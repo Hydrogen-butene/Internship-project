@@ -1,5 +1,12 @@
 # Internship-project
 Install the npm and its dependencies using "npm install"  in comand prompt where package.json file exist.
+-------------------------
+USE THIS URL TO CONNECT TO MONGODB.
+---------------------------------------------------------------------------------------------------------------------
+MONGO_URL="mongodb+srv://joshuachitrakar:104joshua@cluster0.5b2xz4p.mongodb.net/Intern?retryWrites=true&w=majority"
+JWT_SECRET = "ewetwwenwietoqerhwouetuwtgnklgsmlknsoifawetewbgmamnwe"
+---------------------------------------------------------------------------------------------------------------------
+
 
 create a mongodb database and connect with it,
 
