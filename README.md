@@ -1,5 +1,5 @@
 # Internship-project
-Install the npm and its dependencies using "npm install"  
+Install the npm and its dependencies using "npm install"  in comand prompt where package.json file exist.
 
 create a mongodb database and connect with it,
 
@@ -9,9 +9,6 @@ mongoose.connect(process.env.MONGO_URL)
 
 Run the program using "npm start"
 
-
-
-Add mongodb url, JWT secret and PORT to dotenv file and name them accordingly
 Ddotenv is already imported in app.js, for just mare declaration of url, secret and port in dotenv file will work
 
 1. 	MIDDLEWARE TO CHECK WETHER USER IS SIGNED IN OR NOT BY LOOKING AT THE COOKIE STORED
